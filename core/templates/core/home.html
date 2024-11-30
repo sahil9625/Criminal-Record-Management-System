@@ -2,44 +2,132 @@
 {% load static %}
 {% block content %}
 
-{% comment %} to display the home page {% endcomment %}
-<div class="container emp-profile">
+<!-- Add new background logo image to the entire page -->
+<style>
+    /* Set the background image */
+    body {
+        background-image: url("{% static 'img/new-background.png' %}"); /* Updated background image */
+        background-size: cover;  /* Ensure the image covers the entire screen */
+        background-position: center;  /* Center the image */
+        background-repeat: no-repeat;
+        min-height: 100vh;  /* Ensure the background covers the entire height of the viewport */
+        color: #fff;  /* Set the text color to white for visibility */
+    }
 
-    <div class="row">
-            <h4 class="text-muted p-1"> Criminal Detection Platform</h4>
-            <img src="{% static 'img/logo.png'%}" alt="" width="250%">
-        <div class="col-md-4">
-            <div class="profile-head">
-            </div>
-        </div>
-        <div class="col-md-5">
-            <a   href="{% url 'profiles' %}">
-                <input type="submit" class="profile-edit-btn m-2 "
-                        name="btnAddMore" value="View Criminal Profiles" /></a>
-                        
-            <a target="_blank" class="scan" href="{% url 'details' %}">
-                <input type="submit" class="profile-edit-btn m-2"
-                    name="btnAddMore" value="Detect criminal" /></a>
-            
+    /* Container to add an overlay effect */
+    .emp-profile {
+        background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black overlay */
+        border-radius: 10px;
+        padding: 30px;
+    }
+
+    /* Optional: Styling for buttons to make them stand out on top of the background */
+    .btn-lg {
+        font-size: 18px;
+        padding: 10px 30px;
+    }
+
+    /* Button Styling */
+    .btn-outline-light {
+        color: #fff;
+        border-color: #ffcc00;  /* Yellow outline for buttons */
+    }
+
+    .btn-outline-light:hover {
+        background-color: #ffcc00;  /* Yellow background on hover */
+        color: #000;  /* Dark text when hovered */
+    }
+
+    .btn-success {
+        color: #fff;
+        background-color: #ffcc00;  /* Yellow button */
+        border-color: #ffcc00;  /* Yellow border */
+    }
+
+    .btn-success:hover {
+        background-color: #e6b800;  /* Darker yellow on hover */
+        border-color: #e6b800;  /* Darker border */
+    }
+
+    /* Navbar Tab Styling */
+    .nav-tabs .nav-link {
+        background-color: rgba(255, 255, 255, 0.3);
+        border: none;
+        color: #fff;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #ffcc00;  /* Yellow active tab */
+        color: #000;
+    }
+
+    /* Table Styling */
+    .table-bordered {
+        border: 1px solid #ffcc00;  /* Yellow border for table */
+    }
+
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: rgba(255, 204, 0, 0.1); /* Light yellow for alternate rows */
+    }
+
+    .table-bordered th, .table-bordered td {
+        border-color: #ffcc00;  /* Yellow borders for table cells */
+    }
+
+    /* Table Header Styling */
+    .thead-dark {
+        background-color: #ffcc00;  /* Yellow background for header */
+        color: #000;
+    }
+
+    .text-light {
+        color: #ffcc00;  /* Yellow text color for light elements */
+    }
+</style>
+
+<!-- Main Container with Dark Background -->
+<div class="container emp-profile py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12 text-center mb-4">
+            <h4 class="text-light font-weight-bold">Criminal Record Management System</h4>
+            <img src="{% static 'img/logo.png'%}" alt="Logo" width="150">
         </div>
     </div>
-    <hr>
 
-    {% comment %} to show history of detected profiles {% endcomment %}
+    <!-- Buttons Section -->
+    <div class="row justify-content-center">
+        <div class="col-md-5 text-center">
+            <a href="{% url 'profiles' %}">
+                <input type="submit" class="profile-edit-btn m-2 btn btn-outline-light btn-lg"
+                       name="btnAddMore" value="View Criminal Profiles" />
+            </a>
+            <a target="_blank" class="scan" href="{% url 'details' %}">
+                <input type="submit" class="profile-edit-btn m-2 btn btn-success btn-lg"
+                       name="btnAddMore" value="Detect Criminal" />
+            </a>
+        </div>
+    </div>
+    <hr class="bg-light">
+
+    <!-- Tab Section for History -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" >
-                History</a>
+        <li class="nav-item">
+            <a class="nav-link text-light active" id="history-tab" data-toggle="tab" href="#history" role="tab">
+                History
+            </a>
+        </li>
     </ul>
 
     <div class="tab-content" id="myTabContent">
         <br>
-        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="contact-tab">
-            <table class="table table-striped ">
-                <thead>
+        <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <!-- History Table -->
+            <table class="table table-bordered table-striped text-center text-light">
+                <thead class="thead-dark">
                     <tr>
-                        <th scope="col"></th>
+                        <th scope="col">#</th>
                         <th scope="col">Profile ID</th>
-                        <th scope="col">Time of detection</th>
+                        <th scope="col">Time of Detection</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,27 +136,28 @@
                         <th scope="row">*</th>
                         <td>{{face.last_face}}</td>
                         <td>{{face.date}}</td>
-                        
                     </tr>
-                    {% endfor%}
+                    {% endfor %}
                 </tbody>
             </table>
-
-            {% comment %} to install clear history button {% endcomment %}
-            <a href="{% url 'clear_history' %}"><button type="button" class="btn btn-outline-danger m-1">Clear History</button></a>
+            <a href="{% url 'clear_history' %}">
+                <button type="button" class="btn btn-outline-danger m-1">Clear History</button>
+            </a>
         </div>
     </div>
 </div>
 
-{% comment %} to add django CSRF token to jQuery AJAX function {% endcomment %}
+<!-- Custom JavaScript for AJAX -->
 <script>
     $(".scan").click(function () {
         var postData = { csrfmiddlewaretoken: '{{ csrf_token }}' }
         $.ajax({
             url: "{% url 'scan' %}",
-            data: {
-
-            },
+            data: postData,  // CSRF token included in the data
+            method: "POST",  // Ensure the method is POST to send data securely
+            success: function(response) {
+                console.log(response);  // Optional: Handle response if needed
+            }
         });
     });
 </script>
